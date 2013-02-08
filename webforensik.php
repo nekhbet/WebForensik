@@ -1,15 +1,23 @@
 #!/usr/bin/env php
-
 <?php
+namespace IDS;
+use IDS\Init;
+use IDS\Monitor;
+
+// Load the auto-loader
+require('externals/phpids/vendor/autoload.php');
+
+
+// Path to PHPIDS lib
+$phpids_lib_path = './externals/phpids/lib';
 
 /*------------------------------------------------------------------\
-| webforensik.php v0.18 | Wed Mar 28 22:58:39 CEST 2012             |
+| webforensik.php v0.19 | Fri Feb 08                                |
 | License: GPL v2 (http://www.gnu.org/licenses/gpl-2.0.html)        |
 |                                                                   |
 | **************************** INSTALL **************************** |
 | STEP 1: get the latest version of PHPIDS from https://phpids.org, |
 |         move this script to your PHPIDS lib/ directory or adjust  |
-|         */ static $phpids_lib_path = './'; /*                     |
 | STEP 2: (optional) if you consider using dns lookups (-h),        |
 |         you might want to run a local, caching nameserver         |
 |         like dnsmasq to increase performance a little bit         |
@@ -39,7 +47,7 @@ $dns_lookup = FALSE;
 // ------------------------------------------------------------------ //
 
 # turn off PHP warnings (use own ones instead)
-error_reporting(E_ERROR | E_PARSE);
+// error_reporting(E_ERROR | E_PARSE);
 
 # set the include path properly for PHPIDS
 set_include_path(get_include_path().PATH_SEPARATOR.$phpids_lib_path);
@@ -414,12 +422,12 @@ function pass_through_phpids($request, $data, $phpids_lib_path)
   try
   {
     // overwrite some configs so we can always find the PHPIDS directory
-    $init = IDS_Init::init($phpids_lib_path . '/IDS/Config/Config.ini.php');
+    $init = Init::init($phpids_lib_path . '/IDS/Config/Config.ini.php');
     $init->config['General']['base_path'] = $phpids_lib_path . '/IDS/';
     $init->config['General']['use_base_path'] = TRUE;
 
     // initiate the PHPIDS and fetch/return the results
-    $ids = new IDS_Monitor($request, $init);
+    $ids = new Monitor($request, $init);
     $result = $ids->run();
 
     if (!$result->isEmpty())
