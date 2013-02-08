@@ -294,7 +294,9 @@ while ($line = fgets($input_stream))
     {
       // from here on, catch SIGINT (CTRL+C)
       declare(ticks = 1);
-      pcntl_signal(SIGINT, "clean_exit");
+      pcntl_signal(SIGINT, function($signal){
+         clean_exit($signal);
+      });
     }
 
     // show console progress bar :)
